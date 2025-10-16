@@ -7,34 +7,25 @@
   <title>Admin Studio — Home</title>
   <link rel="icon" href="data:," />
 
-  <!-- ===================================================================
-       GLOBAL STYLES
-       =================================================================== -->
+  <!-- Global styles that actually exist -->
   <link rel="stylesheet" href="/assets/dock/dock.css" />
   <link rel="stylesheet" href="/assets/home/styles.css" />
   <link rel="stylesheet" href="/assets/course/builder/styles.css" />
-  <link rel="stylesheet" href="/assets/menu/styles.css" />
-
-  <!-- Course Pages shared skin (renamed from pages.css → preview.css) -->
   <link rel="stylesheet" href="/assets/course/pages/pages.css" />
 </head>
 <body>
-
-  <!-- ============================================================= -->
+  <!-- Mount point -->
   <div id="pageGrid"></div>
-  <!-- ============================================================= -->
 
-  <!-- ===================== CORE APP (ESM) ======================== -->
+  <!-- Core app (ESM) -->
   <script type="module" src="/assets/home/grid.js"></script>
   <script type="module" src="/assets/home/hero.js"></script>
   <script type="module" src="/assets/dock/dock.js"></script>
 
-  <!-- ===================== ROUTER (BuilderPages) =================
-       Provides window.BuilderPages.open/close used by builder & pages -->
+  <!-- Router (BuilderPages) -->
   <script type="module" src="/assets/course/builder/pages.js"></script>
 
-  <!-- ===================== BUILDER (shell UI) ====================
-       Expose CourseBuilder.open() on window for launching the shell -->
+  <!-- Builder shell -->
   <script type="module">
     import * as Builder from '/assets/course/builder/builder.js';
     window.CourseBuilder = {
@@ -42,18 +33,13 @@
     };
   </script>
 
-  <!-- ===================== HAMBURGER (menu) ======================
-       1) Load module so its internal exposePublicAPI() can attach
-          window.BuilderHamburger (your hamburger.js already does this).
-       2) Additionally, merge its named exports into window.BuilderHamburger
-          so the API is always available even if tree-shaken. -->
+  <!-- Hamburger (menu) -->
   <script type="module">
     import * as Burger from '/assets/course/builder/hamburger.js';
     window.BuilderHamburger = Object.assign(window.BuilderHamburger || {}, Burger);
   </script>
 
-  <!-- ===================== OPTIONAL MENU =========================
-       If you have a separate “course menu” module, load it here. -->
+  <!-- Optional menu (only if you actually have this file) -->
   <!-- <script type="module" src="/assets/menu/course.menu.js"></script> -->
 </body>
-</html> 
+</html>

@@ -1,0 +1,124 @@
+=========================================
+PROJECT STRUCTURE — ADMIN STUDIO (Final with /media)
+=========================================
+
+project-root/
+│
+├── assets/
+│   │
+│   ├── course/                         # Course-related functionality
+│   │   ├── builder/                    # Handles course builder logic
+│   │   │   ├── audit.builder.js
+│   │   │   ├── builder.js
+│   │   │   ├── page.builder.js
+│   │   │   └── page.picker.js
+│   │   │
+│   │   └── pages/                      # Course page modules
+│   │       ├── achievement.js
+│   │       ├── activity.js
+│   │       ├── audit.pages.js
+│   │       ├── conclusion.js
+│   │       ├── feedback.js
+│   │       ├── introduction.js
+│   │       ├── pages.js
+│   │       ├── payment.js
+│   │       └── preview.js
+│   │
+│   ├── home/                           # Home/dashboard modules
+│   │   ├── layout/
+│   │   │   ├── audit.layout.js
+│   │   │   ├── home.layout.js
+│   │   │   └── layout.js
+│   │   │
+│   │   ├── menu/
+│   │   │   ├── audit.menu.js
+│   │   │   ├── course.menu.js
+│   │   │   ├── home.menu.js
+│   │   │   └── menu.js
+│   │   │
+│   │   └── home.js
+│   │
+│   ├── media/                          # Static and dynamic media assets
+│   │   ├── images/                     # App icons, banners, and UI images
+│   │   ├── video/                      # Tutorial or presentation videos
+│   │   ├── audio/                      # Audio clips or sound effects
+│   │   └── icons/                      # SVG or icon sets
+│   │
+│   ├── systems/                        # Core reusable system logic
+│   │   ├── audit.js
+│   │   └── storage.js
+│   │
+│   └── user/                           # User-related logic and roles
+│       ├── customer/
+│       │   └── customer.js
+│       │
+│       └── staff/
+│           └── staff.js
+│
+├── index.html                          # Main HTML entry point
+├── main.js                             # Application bootstrap and orchestration
+├── structure.txt                       # Project documentation (this file)
+└── styles.css                          # Global stylesheet
+
+=========================================
+NOTES
+=========================================
+
+▶ STRUCTURE OVERVIEW
+- /assets/ → Contains all JavaScript and static resource folders.
+- /course/ → Manages course logic, page builders, and course content.
+- /home/ → Handles main dashboard layout and menus.
+- /systems/ → Core application systems (e.g., audit, storage, etc.).
+- /user/ → Role-based modules for customers and staff.
+- /media/ → Dedicated for static and dynamic media content:
+  • /images/ → Logos, UI images, and backgrounds
+  • /video/ → Course or tutorial videos
+  • /audio/ → Sounds, alerts, or background audio
+  • /icons/ → SVGs or sprite sheets
+
+▶ NAMING CONVENTIONS
+- All lowercase + dot-separated filenames.
+- Each folder has a hub file when appropriate (pages.js, layout.js, menu.js).
+- Keep assets referenced via relative imports (e.g., `./assets/media/images/logo.png`).
+
+=========================================
+EXAMPLE: main.js BOOTSTRAP
+=========================================
+
+import { initHome } from './assets/home/home.js';
+import { initCourse } from './assets/course/builder/builder.js';
+import AuditSystem from './assets/systems/audit.js';
+import Storage from './assets/systems/storage.js';
+import Customer from './assets/user/customer/customer.js';
+import Staff from './assets/user/staff/staff.js';
+
+function initApp() {
+    console.log('Admin Studio starting...');
+
+    // Initialize systems
+    Storage.init?.();
+    AuditSystem.init?.();
+
+    // Initialize core sections
+    initHome();
+    initCourse();
+
+    // Initialize user role modules
+    Customer.init?.();
+    Staff.init?.();
+}
+
+initApp();
+
+=========================================
+FUTURE SCALING (Recommended)
+=========================================
+
+- /assets/admin/ → Administrative dashboards and controls
+- /assets/shared/ → Shared utilities, UI components, or constants
+- /assets/api/ → Centralized API service handlers (fetch, endpoints, etc.)
+- /assets/plugins/ → Optional extension modules or add-ons
+
+=========================================
+END OF STRUCTURE
+=========================================

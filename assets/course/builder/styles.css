@@ -1,0 +1,257 @@
+/* =========================================================
+   BUILDER — Minimal, Transparent Header + Unified Buttons
+   (dev-agnostic: buttons always visible in red/green)
+   ========================================================= */
+
+/* ---------- Tokens ---------- */
+:root{
+  --hb-blue:  #0A84FF;
+  --hb-grey:  #6e6e73;
+  --hb-green: #32D74B;
+  --hb-red:   #FF3B30;
+
+  --ring:     rgba(255,255,255,.55);
+  --panel:    rgba(12,16,22,.96);
+  --panel-2:  rgba(13,17,24,.9);
+}
+
+/* ---------- Root shell (fixed so pickers/overlays work) ---------- */
+#builderRoot{
+  position: fixed;
+  inset: 0;
+  z-index: 2147483600;
+  background: #000;
+  color: #eef3ff;
+  font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Allow inner scrolling */
+.builder-shell{
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;                 /* critical for inner scroll */
+}
+
+/* ---------- Scrollable body ---------- */
+.builder-body{
+  flex: 1;
+  min-height: 0;                 /* critical for inner scroll */
+  overflow-y: auto;              /* ENABLE SCROLL */
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+
+  display: block;                /* no centering */
+  /* header floats, so no top padding needed */
+  padding-top: 0;
+  padding-bottom: calc(env(safe-area-inset-bottom) + 120px);
+  background:#000;
+}
+
+/* =========================
+   Stealth Builder Header
+   (full-bleed hero; no ribbon)
+   ========================= */
+
+.builder-head{
+  position: fixed;               /* overlay, not in document flow */
+  top: 0; left: 0; right: 0; height: 56px;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  z-index: 2147483603;           /* above page content */
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 14px;
+  pointer-events: none;          /* header strip doesn’t eat clicks */
+}
+
+/* Hide the "Builder — Title" */
+.builder-title{ display:none !important; }
+
+/* ---------- Buttons (header) ---------- */
+.builder-actions{ display:flex; gap:8px; }
+
+.builder-hamburger,
+.builder-actions button{
+  pointer-events: auto;          /* restore clickability on chips */
+  display:inline-flex; align-items:center; justify-content:center;
+  height:36px; min-width:36px; padding:0 12px;
+  border-radius:10px;
+  border: 1px solid rgba(255,255,255,.18);
+  background: rgba(0,0,0,.35);   /* translucent chip look */
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  font:700 15px/1 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  color:#fff; text-align:center; cursor:pointer;
+  transition:transform .15s ease, filter .15s ease, box-shadow .15s ease, background .15s ease;
+}
+
+/* Colors (semantic) */
+.builder-hamburger{ background:var(--hb-blue) !important; border:none; -webkit-backdrop-filter:none; backdrop-filter:none; }
+#builderEdit       { background:var(--hb-grey);  }
+#builderCancel     { background:var(--hb-grey);  }
+#builderEdit.save  { background:var(--hb-green); }
+#builderClose      { background:var(--hb-red);   }
+
+/* Hover / Active */
+.builder-hamburger:hover,
+.builder-actions button:hover{
+  filter:none;
+  background: rgba(0,0,0,.45);
+}
+.builder-hamburger:hover{ background: color-mix(in srgb, var(--hb-blue) 85%, white) !important; }
+.builder-actions button:active,
+.builder-hamburger:active{ transform:translateY(1px); filter:brightness(0.95); }
+
+/* Focus ring */
+.builder-hamburger:focus-visible,
+.builder-actions button:focus-visible{
+  outline:0; box-shadow:0 0 0 3px var(--ring);
+}
+
+/* Disabled guard */
+.builder-actions button:disabled{ opacity:.55; cursor:not-allowed; transform:none; filter:none; }
+
+/* Cancel visibility (script controls it) */
+#builderCancel[hidden]{ display:none !important; }
+
+/* Placeholder text */
+.builder-placeholder{ text-align:center; font-size:16px; opacity:.8; }
+
+/* ---------- Slide-out menu ---------- */
+.builder-menu{
+  position:fixed; top:0; left:0; bottom:0; width:260px;
+  background:var(--panel);
+  border-right:1px solid rgba(255,255,255,.15);
+  box-shadow:0 0 30px rgba(0,0,0,.55);
+  transform:translateX(-110%); transition:transform .25s ease;
+  z-index:2147483604;            /* above header buttons */
+  display:flex; flex-direction:column;
+}
+.builder-menu.show{ transform:translateX(0); }
+
+.menu-head{
+  padding:14px; font-weight:700;
+  background:var(--panel-2);
+  border-bottom:1px solid rgba(255,255,255,.1);
+}
+.menu-body{
+  flex:1 1 auto;
+  overflow:auto;
+  padding:14px;
+  font-size:14px; opacity:.9;
+  /* reserve space so rows never sit under the footer */
+  padding-bottom: calc(env(safe-area-inset-bottom) + 100px);
+}
+
+/* Drawer footer — hard snap (supports .menu-footer OR [data-bottom-bar]) */
+.builder-menu .menu-footer,
+.builder-menu [data-bottom-bar]{
+  position:absolute; left:0; right:0; bottom:0;
+  padding:10px 12px 12px;
+  background: linear-gradient(180deg,
+              rgba(0,0,0,0),
+              rgba(0,0,0,.35) 20%,
+              rgba(0,0,0,.65));
+  display:grid; gap:8px; z-index:1;
+}
+.builder-menu .menu-footer button,
+.builder-menu [data-bottom-bar] button{
+  width:100%;
+  padding:9px 11px;              /* ~10% smaller than 10x12 */
+  border-radius:9px;
+  border:1px solid rgba(255,255,255,.18);
+  color:#fff;
+  font:700 13px/1 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  cursor:pointer;
+}
+.builder-menu .menu-footer .btn-grey,
+.builder-menu [data-bottom-bar] .btn-grey  { background: var(--hb-grey,  #6e6e73); }
+.builder-menu .menu-footer .btn-green,
+.builder-menu [data-bottom-bar] .btn-green { background: var(--hb-green, #32D74B); }
+.builder-menu .menu-footer .btn-blue,
+.builder-menu [data-bottom-bar] .btn-blue  { background: var(--hb-blue,  #0A84FF); }
+.builder-menu .menu-footer button:hover,
+.builder-menu [data-bottom-bar] button:hover{ filter: brightness(1.06); }
+
+/* ---------- Motion preference ---------- */
+@media (prefers-reduced-motion: reduce){
+  .builder-hamburger,
+  .builder-actions button{ transition:none; }
+  .builder-menu{ transition:none; }
+} 
+/* =========================
+   Hamburger list + active state
+   ========================= */
+
+/* baseline row layout */
+.builder-menu .hamburger-item{
+  display: grid;
+  grid-template-columns: 1fr auto;   /* JS adds a 24px col in edit mode */
+  gap: 8px;
+  align-items: center;
+  min-height: 36px;
+  border-bottom: 1px solid rgba(255,255,255,.08);
+}
+
+/* the open button – make it full width, neutral by default */
+.builder-menu .hamburger-open{
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  color: #eef3ff;
+  border: 0;
+  padding: 8px 6px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+/* title span inside the button */
+.builder-menu .hamburger-title{
+  color: inherit;
+  font-weight: inherit;
+}
+
+/* ACTIVE row = iOS blue chip + indent */
+.builder-menu .hamburger-item[data-active="1"] .hamburger-open{
+  background: rgba(10,132,255,.14);
+  border: 1px solid rgba(10,132,255,.35);
+  padding-left: 20px;                /* indent */
+}
+.builder-menu .hamburger-item[data-active="1"] .hamburger-title{
+  color: var(--hb-blue, #0A84FF);
+  font-weight: 800;
+}
+
+/* faint hover so non-active items feel clickable */
+.builder-menu .hamburger-item:not([data-active="1"]) .hamburger-open:hover{
+  background: rgba(255,255,255,.06);
+}
+
+/* make sure content is visible even if a global button reset exists */
+.builder-menu .hamburger-open,
+.builder-menu .hamburger-open *{
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+/* checkbox alignment in edit mode */
+.builder-menu .hamburger-item input[type="checkbox"]{
+  width: 18px; height: 18px;
+  margin: 0 2px 0 0;
+} 
+.hamburger-item[data-active="1"] .hamburger-open {
+  background: rgba(10,132,255,.14);
+  border: 1px solid rgba(10,132,255,.35);
+  padding-left: 20px;
+}
+.hamburger-item[data-active="1"] .hamburger-title {
+  color: var(--hb-blue,#0A84FF);
+  font-weight: 800;
+} 
+

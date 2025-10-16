@@ -1,0 +1,148 @@
+/* =========================================================
+   INTRODUCTION — Hero + Text (Title, Subtitle, Body)
+   Consistent spacing with preview layout
+   ========================================================= */
+
+:root{
+  --intro-hero-h: clamp(260px, 42vh, 520px);
+  --intro-pad-x: 18px;
+  --intro-pad-x-lg: 22px;
+  --intro-blue: var(--pv-blue, #0A84FF);
+  --intro-green: var(--pv-green, #22c55e);
+}
+
+/* ---------- Hero Section ---------- */
+.intro-wrap{
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  padding-top: var(--intro-hero-h);
+  background: #000;
+}
+
+.intro-hero{
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: var(--intro-hero-h);
+  background-size: cover;
+  background-position: center top;
+  background-repeat: no-repeat;
+  overflow: hidden;
+  z-index: 0;
+  transform: translateZ(0);
+}
+.intro-hero-fade{
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0) 45%, rgba(0,0,0,.7) 75%, #000 100%);
+  pointer-events: none;
+}
+
+/* ---------- Image controls (Edit mode) ---------- */
+.intro-hero-tools{
+  position: absolute;
+  bottom: 14px;
+  left: var(--intro-pad-x);
+  z-index: 2;
+}
+@media (min-width:720px){
+  .intro-hero-tools{ left: var(--intro-pad-x-lg); }
+}
+.intro-hero-btn{
+  background: rgba(0,0,0,.6);
+  border: 1px solid rgba(255,255,255,.35);
+  border-radius: 10px;
+  padding: 8px 14px;
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+  backdrop-filter: blur(6px);
+  transition: background .2s ease;
+}
+.intro-hero-btn:hover{ background: rgba(0,0,0,.8); }
+
+/* ---------- Text Section ---------- */
+.intro-content{
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 32px var(--intro-pad-x) 40px;
+}
+@media (min-width:720px){
+  .intro-content{ padding: 32px var(--intro-pad-x-lg) 40px; }
+}
+
+.intro-title{
+  font-size: clamp(38px, 6vw, 60px);
+  font-weight: 900;
+  color: #fff;
+  line-height: 1.05;
+  margin: 0;
+}
+.intro-subtitle{
+  font-size: clamp(20px, 3vw, 26px);
+  font-weight: 700;
+  color: var(--intro-blue);
+  margin: 0 0 10px;
+}
+.intro-body{
+  font-size: 17px;
+  line-height: 1.65;
+  color: rgba(255,255,255,.9);
+  max-width: 780px;
+  white-space: pre-wrap;
+}
+
+/* ---------- Inputs (Edit mode) ---------- */
+.intro-title-input,
+.intro-subtitle-input,
+.intro-body-input{
+  width: 100%;
+  max-width: 780px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,.25);
+  background: #000;
+  color: #fff;
+  font-weight: 600;
+  font-size: 16px;
+  padding: 10px 12px;
+  outline: none;
+  box-sizing: border-box;
+}
+.intro-title-input{ font-size: clamp(38px, 6vw, 60px); font-weight: 900; }
+.intro-subtitle-input{ font-size: clamp(20px, 3vw, 26px); color: var(--intro-blue); }
+.intro-body-input{
+  min-height: 160px;
+  line-height: 1.6;
+  resize: vertical;
+}
+.intro-title-input::placeholder,
+.intro-subtitle-input::placeholder,
+.intro-body-input::placeholder{
+  color: rgba(255,255,255,.5);
+}
+.intro-body-input:focus,
+.intro-subtitle-input:focus,
+.intro-title-input:focus{
+  outline: 2px solid var(--intro-blue);
+  outline-offset: 2px;
+}
+
+/* ---------- Responsive Lock ---------- */
+@media (min-width:980px){
+  .intro-body, .intro-body-input{
+    max-width: 820px;
+  }
+}
+
+/* ---------- Consistency with Preview CTA ---------- */
+.intro-wrap,
+.intro-content{
+  align-items: flex-start;
+}

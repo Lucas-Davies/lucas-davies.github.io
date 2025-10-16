@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="color-scheme" content="dark light" />
+  <title>Admin Studio — Home</title>
+  <link rel="icon" href="data:," />
+
+  <!-- ===================================================================
+       GLOBAL STYLES
+       =================================================================== -->
+  <link rel="stylesheet" href="/assets/styles.css" />
+  <link rel="stylesheet" href="/assets/dock/dock.css" />
+  <link rel="stylesheet" href="/assets/home/styles.css" />
+  <link rel="stylesheet" href="/assets/course/builder/styles.css" />
+  <link rel="stylesheet" href="/assets/menu/styles.css" />
+
+  <!-- Course Pages shared skin (renamed from pages.css → preview.css) -->
+  <link rel="stylesheet" href="/assets/course/pages/pages.css" />
+</head>
+<body>
+
+  <!-- ============================================================= -->
+  <div id="pageGrid"></div>
+  <!-- ============================================================= -->
+
+  <!-- ===================== CORE APP (ESM) ======================== -->
+  <script type="module" src="/assets/home/grid.js"></script>
+  <script type="module" src="/assets/home/hero.js"></script>
+  <script type="module" src="/assets/dock/dock.js"></script>
+
+  <!-- ===================== ROUTER (BuilderPages) =================
+       Provides window.BuilderPages.open/close used by builder & pages -->
+  <script type="module" src="/assets/course/builder/pages.js"></script>
+
+  <!-- ===================== BUILDER (shell UI) ====================
+       Expose CourseBuilder.open() on window for launching the shell -->
+  <script type="module">
+    import * as Builder from '/assets/course/builder/builder.js';
+    window.CourseBuilder = {
+      open: Builder.openCourseBuilder || Builder.open || (() => {})
+    };
+  </script>
+
+  <!-- ===================== HAMBURGER (menu) ======================
+       1) Load module so its internal exposePublicAPI() can attach
+          window.BuilderHamburger (your hamburger.js already does this).
+       2) Additionally, merge its named exports into window.BuilderHamburger
+          so the API is always available even if tree-shaken. -->
+  <script type="module">
+    import * as Burger from '/assets/course/builder/hamburger.js';
+    window.BuilderHamburger = Object.assign(window.BuilderHamburger || {}, Burger);
+  </script>
+
+  <!-- ===================== OPTIONAL MENU =========================
+       If you have a separate “course menu” module, load it here. -->
+  <!-- <script type="module" src="/assets/menu/course.menu.js"></script> -->
+</body>
+</html> 
